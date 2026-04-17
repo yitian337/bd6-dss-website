@@ -223,5 +223,50 @@ def load_styles():
         color: #6b7a8c;
         text-align: center;
     }
+    
+    .details-page-title {
+        font-size: 42px;
+        font-weight: 700;
+        color: #1f4e79;
+        margin-top: 8px;
+        margin-bottom: 18px;
+    }
+    
+    .details-page-subtitle {
+        font-size: 18px;
+        color: #5f6b7a;
+        margin-bottom: 36px;
+    }
+    
+    .details-section-heading {
+        font-size: 22px;
+        font-weight: 700;
+        color: #1f1f1f;
+        margin-bottom: 16px;
+    }
+    
+    .st-key-details_image_card {
+        background: #f8fbff;
+        border: 1px solid #dbe7f3;
+        border-radius: 20px;
+        padding: 24px;
+        min-height: 420px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+    }
+    
+    .details-image-placeholder {
+        width: 100%;
+        height: 340px;
+        border-radius: 18px;
+        background: #eef5fb;
+        border: 1px dashed #c5d6ea;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-size: 16px;
+        color: #6b7a8c;
+        text-align: center;
+    }
     </style>
     """, unsafe_allow_html=True)
