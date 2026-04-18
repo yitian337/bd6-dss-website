@@ -1,6 +1,8 @@
 import streamlit as st
 from styles import load_styles
+from data import *
 
+init_data()
 load_styles()
 
 # 初始化状态
@@ -22,3 +24,4 @@ elif st.session_state.page == "report":
 elif st.session_state.page == "details":
     import page3_details
     page3_details.show()
+    
