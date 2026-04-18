@@ -8,8 +8,6 @@ def init_data():
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
 
-    cursor.execute("DROP TABLE IF EXISTS PATIENTS")
-
     table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
     ID TEXT PRIMARY KEY,
     NAME TEXT,
