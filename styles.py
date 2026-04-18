@@ -15,10 +15,6 @@ def load_styles():
     }
     
 
-    .stApp {
-        background-color: #f2f4f7;
-    }
-
     /* 通用文字 */
     .section-title {
         font-size: 20px;

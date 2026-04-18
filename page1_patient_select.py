@@ -8,6 +8,7 @@ AVATAR_DIR = "avatars"
 def show():
     st.markdown('<div class="main-title">Rehabilitation Decision Support System</div>', unsafe_allow_html=True)
     st.markdown('<div class="section-title">Patient Selection</div>', unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
 
     cols = st.columns(4, gap="large")
 
