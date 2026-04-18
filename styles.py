@@ -14,7 +14,12 @@ def load_styles():
         padding-top: 1rem;
     }
     
-
+    .block-container {
+        max-width: 1400px;
+        padding-left: 50px;
+        padding-right: 50px;
+    }
+    
     /* 通用文字 */
     .section-title {
         font-size: 20px;

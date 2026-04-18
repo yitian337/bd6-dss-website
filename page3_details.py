@@ -2,6 +2,7 @@ import os
 import streamlit as st
 from data import fake_exercise
 
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def resolve_local_path(rel_path):
