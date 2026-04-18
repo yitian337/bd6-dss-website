@@ -14,40 +14,63 @@ patients = [
 # later can be replaced by SQL
 # -----------------------------
 fake_reports = {
-    "Reach and Retrieve": {
+    "Patient A": {
         "score": 84,
         "rom": "72%",
         "stability": "80%",
         "coordination": "78%",
-        "feedback": "The patient completed the reach task with moderate control. Slight trunk compensation was observed during forward reach.",
-        "clinician_note": "Encourage slower reaching speed and reduce shoulder elevation during retrieval.",
+        "feedback": "goodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgood",
+        "clinician_note": "I hate the start of school.",
         "image": "images/reach.png"
     },
-    "Lift Arm": {
+    "Patient B": {
         "score": 88,
         "rom": "85%",
         "stability": "82%",
         "coordination": "86%",
         "feedback": "Arm lifting performance was generally good. Minor asymmetry appeared near the end of the movement.",
-        "clinician_note": "Continue with guided repetition and monitor fatigue in the final phase.",
+        "clinician_note": "hi",
         "image": "images/lift_arm.png"
     },
-    "Rotate Arm": {
+    "Patient C": {
         "score": 76,
         "rom": "68%",
         "stability": "74%",
         "coordination": "71%",
         "feedback": "Rotation task showed limited range and reduced smoothness. Compensation at the shoulder was detected.",
-        "clinician_note": "Focus on controlled rotation and reduce excessive upper body movement.",
+        "clinician_note": "wish we can get good marks.",
         "image": "images/rotate_arm.png"
     },
-    "Unknown": {
+    "Patient D": {
         "score": 69,
         "rom": "61%",
         "stability": "65%",
         "coordination": "63%",
-        "feedback": "Unknown exercise category. Motion quality appears inconsistent and requires manual review.",
-        "clinician_note": "Please verify exercise type and confirm whether the uploaded sample is correctly labeled.",
+        "feedback": "no feedback",
+        "clinician_note": "🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱",
         "image": "images/unknown.png"
+    }
+}
+
+fake_exercise = {
+    "Reach and Retrieve": {
+        "image": "images/reach.png",
+        "feedback": "Reach task performance...",
+        "clinician_note": "Keep arm straight."
+    },
+    "Lift Arm": {
+        "image": "images/lift_arm.png",
+        "feedback": "Arm lifting is stable...",
+        "clinician_note": "Reduce shoulder elevation."
+    },
+    "Rotate Arm": {
+        "image": "images/rotate_arm.png",
+        "feedback": "Rotation limited...",
+        "clinician_note": "Focus on smooth motion."
+    },
+    "Unknown": {
+        "image": "images/unknown.png",
+        "feedback": "Unknown exercise...",
+        "clinician_note": "Check classification."
     }
 }

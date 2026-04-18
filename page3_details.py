@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from data import fake_reports
+from data import fake_exercise
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -18,8 +18,8 @@ def show():
     if "selected_exercise" not in st.session_state:
         st.session_state.selected_exercise = "Reach and Retrieve"
 
-    current_ex = st.session_state.selected_exercise
-    report = fake_reports.get(current_ex, fake_reports["Unknown"])
+    current_ex = st.session_state.get("selected_exercise", "Reach and Retrieve")
+    exercise = fake_exercise.get(current_ex, fake_exercise["Unknown"])
 
     # =============================
     # Top area
@@ -76,19 +76,17 @@ def show():
         unsafe_allow_html=True
     )
 
-    image_path = report.get("image", "")
-    full_image_path = resolve_local_path(image_path)
+    image_path = exercise.get("image", "")
 
-    with st.container(key="details_image_card"):
-        if full_image_path and os.path.exists(full_image_path):
-            st.image(full_image_path, use_container_width=True)
-        else:
-            st.markdown(
-                """
-                <div class="details-image-placeholder">
-                    📷<br>
-                    Image not found
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+    if image_path and os.path.exists(image_path):
+        st.image(image_path, use_container_width=True)
+    else:
+        st.markdown(
+            """
+            <div class="details-image-placeholder">
+                📷<br>
+                Image not found
+            </div>
+            """,
+            unsafe_allow_html=True
+        )

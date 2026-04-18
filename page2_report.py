@@ -1,6 +1,7 @@
 import os
 import streamlit as st
 from data import patients, fake_reports
+import time
 
 #get photo
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -10,8 +11,10 @@ def get_avatar_path(patient_id):
 
 def show():
     patient = st.session_state.selected_patient
-    current_ex = st.session_state.get("selected_exercise", "Reach and Retrieve")
-    report = fake_reports.get(current_ex, fake_reports["Unknown"])
+    report = fake_reports.get(patient["name"])
+    if report is None:
+        st.warning("No report found")
+        st.stop()
     patient_id = patient["id"]
 
     avatar_path = get_avatar_path(patient_id)
@@ -152,20 +155,34 @@ def show():
 
         st.markdown(
             f"""
-            <div class="summary-block">
-                <div class="summary-label">Exercise Type</div>
-                <div class="summary-value">{current_ex}</div>
-            </div>
 
             <div class="summary-block">
                 <div class="summary-label">AI Feedback</div>
                 <div class="summary-value">{report.get("feedback", "")}</div>
             </div>
 
-            <div class="summary-block">
-                <div class="summary-label">Clinician Note</div>
-                <div class="summary-value">{report.get("clinician_note", "")}</div>
-            </div>
             """,
             unsafe_allow_html=True
         )
+
+        # Clinician Note
+        st.markdown(
+            '<div class="summary-label">Clinician Note</div>',
+            unsafe_allow_html=True
+        )
+
+        note = st.text_area(
+            "Edit clinician note",
+            value=report.get("clinician_note", ""),
+            key=f"note_{patient['id']}",
+            height=120,
+            label_visibility="collapsed"
+        )
+
+        msg = st.empty()
+
+        if st.button("Save Note"):
+            fake_reports[patient["name"]]["clinician_note"] = note
+            msg.success("Saved!")
+            time.sleep(2)
+            msg.empty()
