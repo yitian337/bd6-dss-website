@@ -24,30 +24,37 @@ def show():
         col1, col2 = st.columns([9, 1], gap="large")
 
         with col1:
-            av, info = st.columns([1.2, 6], gap="medium")
+            av, info = st.columns([0.8, 6], gap="medium")
 
             with av:
-                st.markdown(
-                    """
-                    <div style="
-                        width:90px;
-                        height:90px;
-                        border-radius:18px;
-                        background:#eef5fb;
-                        border:1px dashed #c5d6ea;
-                        display:flex;
-                        align-items:center;
-                        justify-content:center;
-                        flex-direction:column;
-                        font-size:12px;
-                        color:#6b7a8c;
-                        text-align:center;
-                    ">
-                        Image<br>not found
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                avatar_path = get_avatar_path(str(patient["id"]).strip())
+
+                if os.path.exists(avatar_path):
+                    st.markdown('<div style="margin-left:-10px; margin-top:10px;">', unsafe_allow_html=True)
+                    st.image(avatar_path, width=90)
+                    st.markdown('</div>', unsafe_allow_html=True)
+                else:
+                    st.markdown(
+                        """
+                        <div style="
+                            width:90px;
+                            height:90px;
+                            border-radius:18px;
+                            background:#eef5fb;
+                            border:1px dashed #c5d6ea;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            flex-direction:column;
+                            font-size:12px;
+                            color:#6b7a8c;
+                            text-align:center;
+                        ">
+                            Image<br>not found
+                        </div>
+                        """,
+                        unsafe_allow_html=True
+                    )
 
             with info:
                 st.markdown(f"""
