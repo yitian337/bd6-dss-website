@@ -3,11 +3,55 @@
 # later can be replaced by SQL
 # -----------------------------
 patients = [
-    {"id": "P001", "name": "Patient A", "gender": "Unknown", "initials": "PA"},
-    {"id": "P002", "name": "Patient B", "gender": "Unknown", "initials": "PB"},
-    {"id": "P003", "name": "Patient C", "gender": "Unknown", "initials": "PC"},
-    {"id": "P004", "name": "Patient D", "gender": "Unknown", "initials": "PD"},
+    {"id": "P001", "name": "Patient A", "gender": "Unknown", "initials": "PA", "age": 65},
+    {"id": "P002", "name": "Patient B", "gender": "Unknown", "initials": "PB", "age": 70},
+    {"id": "P003", "name": "Patient C", "gender": "Unknown", "initials": "PC", "age": 58},
+    {"id": "P004", "name": "Patient D", "gender": "Unknown", "initials": "PD", "age": 62},
 ]
+
+# -----------------------------
+# Mock database interface
+# -----------------------------
+
+def all_patients():
+
+    return [
+        (p["id"], p["name"], p["gender"], p.get("age", "N/A"))
+        for p in patients
+    ]
+
+
+def add_patient(id, name, gender, age):
+    """
+    add patients
+    """
+    initials = "".join([word[0] for word in name.split()]).upper()
+
+    patients.append({
+        "id": id,
+        "name": name,
+        "gender": gender,
+        "initials": initials,
+        "age": int(age)
+    })
+
+
+def max_id():
+    """
+    from 0001 → get 1 → find max
+    """
+    if not patients:
+        return 0
+
+    max_num = 0
+    for p in patients:
+        try:
+            num = int(p["id"])
+            max_num = max(max_num, num)
+        except:
+            pass
+
+    return max_num
 
 # -----------------------------
 # Fake exercise report data
