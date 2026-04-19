@@ -13,10 +13,8 @@ def show():
             submit_btn = st.form_submit_button("Enter", width="stretch")
             if submit_btn:
                 if np_name and np_gender and np_age:
-                    raw_id = (max_id() + 1)
-                    np_id = f"{raw_id:04d}"
 
-                    add_patient(np_id, np_name, np_gender, np_age)
+                    add_patient(np_name, np_gender, np_age)
                     
                     st.toast(f"Patient {np_name} added!")
                     st.rerun()
@@ -37,7 +35,7 @@ def show():
 
     for i, patient in enumerate(patients):
 
-        id = patient[0]
+        id = f"{patient[0]:04d}"
         name = patient[1]
         gender = patient[2]
         age = patient[3]

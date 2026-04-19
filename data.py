@@ -1,3 +1,4 @@
+import re
 import sqlite3
 
 # -----------------------------
@@ -9,7 +10,7 @@ def init_data():
     cursor = connection.cursor()
 
     table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
-    ID TEXT PRIMARY KEY,
+    ID INTEGER PRIMARY KEY AUTOINCREMENT,
     NAME TEXT,
     GENDER TEXT,
     AGE INT
@@ -22,13 +23,13 @@ def init_data():
 # Patient functions
 # -----------------------------
 
-def add_patient(id, name, gender, age):
+def add_patient(name, gender, age):
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
 
-    patient = '''INSERT INTO PATIENTS(ID, NAME, GENDER, AGE) 
-        VALUES(?, ?, ?, ?)'''
-    cursor.execute(patient, (id, name, gender, age))
+    patient = '''INSERT INTO PATIENTS(NAME, GENDER, AGE) 
+        VALUES(?, ?, ?)'''
+    cursor.execute(patient, (name, gender, age))
     connection.commit()
     connection.close()
 
@@ -53,6 +54,27 @@ def max_id():
 
     connection.close()
     return max_val
+
+# -----------------------------
+# Patient data functions
+# -----------------------------
+
+def add_movement(id):
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
+
+    table = '''CREATE TABLE IF NOT EXISTS REPORTS(
+    REPORT_ID TEXT PRIMARY KEY,
+    NAME TEXT,
+    GENDER TEXT,
+    AGE INT
+    )'''
+    cursor.execute(table)
+    
+    connection.close()
+
+
+
 
 
 
