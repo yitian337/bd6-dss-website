@@ -5,10 +5,18 @@ import sqlite3
 # Initiate setup
 # -----------------------------
 
+def clear_data():
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
+    cursor.execute("DELETE FROM PATIENTS")
+    cursor.execute("DELETE FROM MOVEMENTS")
+    connection.commit()
+    connection.close()
+
 def init_data():
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
-
+        
     table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     NAME TEXT,
