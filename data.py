@@ -16,29 +16,34 @@ def clear_data():
 def init_data():
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
-        
-    table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
-    ID INTEGER PRIMARY KEY AUTOINCREMENT,
+
+    patients_table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
+    PATIENT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     NAME TEXT,
     GENDER TEXT,
     DOB TEXT
     )'''
-    cursor.execute(table)
-
-    # Drop old MOVEMENTS table if it exists with wrong schema
-    cursor.execute("DROP TABLE IF EXISTS MOVEMENTS")
+    cursor.execute(patients_table)
     
-    # Create movements table with correct schema
     movements_table = '''CREATE TABLE IF NOT EXISTS MOVEMENTS(
     MOVEMENT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
     PATIENT_ID INTEGER,
     DATETIME TEXT,
     MOVEMENT_TYPE TEXT,
     RISK_LEVEL TEXT,
-    FOREIGN KEY(PATIENT_ID) REFERENCES PATIENTS(ID)
+    FOREIGN KEY(PATIENT_ID) REFERENCES PATIENTS(PATIENT_ID)
     )'''
     cursor.execute(movements_table)
-    
+
+    notes_table = '''CREATE TABLE IF NOT EXISTS NOTES(
+    NOTE_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PATIENT_ID INTEGER,
+    DATETIME TEXT,
+    NOTE_TEXT TEXT,
+    FOREIGN KEY(PATIENT_ID) REFERENCES PATIENTS(PATIENT_ID)
+    )'''
+    cursor.execute(notes_table)
+
     connection.commit()
     connection.close()
 
@@ -65,18 +70,32 @@ def all_patients():
     output = cursor.fetchall()
     connection.close()
     return output
+
+# -----------------------------
+# Notes functions
+# -----------------------------
+
+def add_note(patient_id, datetime_str, note_text):
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
     
-def max_id():
+    # Insert note record
+    insert = '''INSERT INTO NOTES(PATIENT_ID, DATETIME, NOTE_TEXT)
+        VALUES(?, ?, ?)'''
+    cursor.execute(insert, (patient_id, datetime_str, note_text))
+    connection.commit()
+    connection.close()
+
+def get_patient_notes(patient_id):
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
 
-    find_max = "SELECT MAX(CAST(ID AS INT)) FROM PATIENTS"
-    cursor.execute(find_max)
-    row = cursor.fetchone() 
-    max_val = row[0] if row and row[0] is not None else 0
-
+    read = '''SELECT NOTE_ID, DATETIME, NOTE_TEXT FROM NOTES 
+              WHERE PATIENT_ID = ? ORDER BY DATETIME DESC'''
+    cursor.execute(read, (patient_id,))
+    output = cursor.fetchall()
     connection.close()
-    return max_val
+    return output   
 
 # -----------------------------
 # Patient data functions
