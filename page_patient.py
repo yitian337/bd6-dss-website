@@ -68,7 +68,8 @@ def show():
     left_col, graph_col, right_col = st.columns([1, 2, 1], gap="medium", vertical_alignment="top")
 
     with left_col:
-        for i in range(4):
+        left_labels = ["Average Jerk Value", "Average ROM", "Average Risk Value", "Total Movements"]
+        for i, label in enumerate(left_labels):
             with st.container(key=f"st-key-left_metric_{i}"):
                 st.markdown(f"""
                     <div style="
@@ -78,13 +79,15 @@ def show():
                         padding: 16px;
                         min-height: 96px;
                         display: flex;
+                        flex-direction: column;
                         align-items: center;
                         justify-content: center;
                         color: #6b7a8c;
                         font-size: 14px;
                         margin-bottom: 12px;
                     ">
-                        Metric {i + 1}
+                        <div style="font-weight: bold; margin-bottom: 8px;">{label}</div>
+                        <div style="font-size: 18px; color: #2f5b82;">--</div>
                     </div>
                 """, unsafe_allow_html=True)
 
@@ -109,7 +112,8 @@ def show():
             """, unsafe_allow_html=True)
 
     with right_col:
-        for i in range(4):
+        right_labels = ["Reach & Retrieve Repetitions", "Cup to Mouth Repetitions", "Lift Arm Repetitions", "Rotate Arm Repetitions"]
+        for i, label in enumerate(right_labels):
             with st.container(key=f"st-key-right_metric_{i}"):
                 st.markdown(f"""
                     <div style="
@@ -119,13 +123,15 @@ def show():
                         padding: 16px;
                         min-height: 96px;
                         display: flex;
+                        flex-direction: column;
                         align-items: center;
                         justify-content: center;
                         color: #6b7a8c;
                         font-size: 14px;
                         margin-bottom: 12px;
                     ">
-                        Metric {i + 1}
+                        <div style="font-weight: bold; margin-bottom: 8px;">{label}</div>
+                        <div style="font-size: 18px; color: #2f5b82;">--</div>
                     </div>
                 """, unsafe_allow_html=True)
 
