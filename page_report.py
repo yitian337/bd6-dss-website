@@ -55,6 +55,10 @@ def show():
                     st.session_state.page = "patient"
                     st.rerun()
 
+    # # -----------------------------
+    # # Table
+    # # -----------------------------
+
     movements = get_patient_movements(patient[0])
 
     if not movements:
@@ -76,32 +80,35 @@ def show():
                 "ID": movement_id
             })
 
-        # Display table with columns
-        col1, col2, col3, col4 = st.columns([2, 1.5, 1.5, 1.2], gap="medium")
-
+        # Display header
+        col1, col2, col3, col4, col5 = st.columns([1.5, 1.2, 1.2, 1.5, 1.2], gap="small")
         with col1:
-            st.markdown('<div class="metric-label" style="text-align: left;"><b>Day</b></div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-weight: bold;">Day</div>', unsafe_allow_html=True)
         with col2:
-            st.markdown('<div class="metric-label"><b>Time</b></div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-weight: bold;">Time</div>', unsafe_allow_html=True)
         with col3:
-            st.markdown('<div class="metric-label"><b>Risk</b></div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-weight: bold;">Movement</div>', unsafe_allow_html=True)
         with col4:
-            st.markdown('<div class="metric-label"><b>Action</b></div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-weight: bold;">Risk</div>', unsafe_allow_html=True)
+        with col5:
+            st.markdown('<div style="font-weight: bold;">Action</div>', unsafe_allow_html=True)
 
         st.divider()
 
+        # Display each row with data and inline buttons
         for idx, row in enumerate(table_data):
-            col1, col2, col3, col4 = st.columns([2, 1.5, 1.5, 1.2], gap="medium")
+            col1, col2, col3, col4, col5 = st.columns([1.5, 1.2, 1.2, 1.5, 1.2], gap="small")
 
             with col1:
-                st.markdown(f'<div class="summary-value">{row["Day"]}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div>{row["Day"]}</div>', unsafe_allow_html=True)
             with col2:
-                st.markdown(f'<div class="summary-value">{row["Time"]}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div>{row["Time"]}</div>', unsafe_allow_html=True)
             with col3:
-                risk_color = "#d32f2f" if row["Risk"] == "High" else "#f57c00" if row["Risk"] == "Medium" else "#388e3c"
-                st.markdown(f'<div class="summary-value" style="color: {risk_color}; font-weight: bold;">{row["Risk"]}</div>', unsafe_allow_html=True)
+                st.markdown(f'<div>{row["Movement"]}</div>', unsafe_allow_html=True)
             with col4:
-                if st.button("View Details", key=f"view_movement_{row['ID']}", use_container_width=True):
-                    st.session_state.selected_movement = row['ID']
-                    st.toast(f"Viewing movement {row['Movement']}")
+                risk_color = "#d32f2f" if row["Risk"] == "High" else "#f57c00" if row["Risk"] == "Medium" else "#388e3c"
+                st.markdown(f'<div style="color: {risk_color}; font-weight: bold;">{row["Risk"]}</div>', unsafe_allow_html=True)
+            with col5:
+                if st.button("View Raw Data", key=f"view_raw_{row['ID']}", use_container_width=True):
+                    pass
 

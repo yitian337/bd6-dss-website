@@ -134,6 +134,45 @@ def get_all_movements():
     connection.close()
     return output
 
+# -----------------------------
+# Sample data function
+# -----------------------------
+
+def add_sample_data():
+    """Add example patient and movement data to the database"""
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
+    
+    # Check if sample data already exists
+    cursor.execute("SELECT COUNT(*) FROM PATIENTS")
+    if cursor.fetchone()[0] > 0:
+        connection.close()
+        return
+    
+    # Add sample patient
+    cursor.execute("INSERT INTO PATIENTS(NAME, GENDER, DOB) VALUES(?, ?, ?)", 
+                   ("John Smith", "M", "1965-03-15"))
+    connection.commit()
+    
+    # Get the patient ID
+    cursor.execute("SELECT last_insert_rowid()")
+    patient_id = cursor.fetchone()[0]
+    
+    # Add sample movements
+    sample_movements = [
+        (patient_id, "2026-05-11 14:30:00", "Reach", "Low"),
+        (patient_id, "2026-05-11 13:15:00", "Lift Arm", "Medium"),
+        (patient_id, "2026-05-10 16:45:00", "Rotate Arm", "High"),
+        (patient_id, "2026-05-10 10:20:00", "Reach", "Low"),
+    ]
+    
+    for patient_id, datetime_str, movement_type, risk_level in sample_movements:
+        cursor.execute("INSERT INTO MOVEMENTS(PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL) VALUES(?, ?, ?, ?)",
+                       (patient_id, datetime_str, movement_type, risk_level))
+    
+    connection.commit()
+    connection.close()
+
 
 
 
