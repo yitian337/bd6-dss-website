@@ -49,6 +49,7 @@ def load_styles():
         font-size: 15px;
         color: #5f6b7a;
         line-height: 1.8;
+        margin-bottom: 15px;
     }
 
     .patient-item-name {
@@ -90,6 +91,27 @@ def load_styles():
         font-weight: 500;
         line-height: 1.7;
     }
+                
+    div[class*="st-select_patient_card"] {
+        background: #f8fbff;
+        border: 1px solid #dbe7f3;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+        min-height: 240px;
+    }
+                
+    div[class*="st-patient_info_card"] {
+        background: #f8fbff;
+        border: 1px solid #dbe7f3;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        margin-bottom: 25px;
+        max-height: 200px;
+    }
+                
 
     /* 顶部卡片 */
     .st-key-top_card {

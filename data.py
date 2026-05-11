@@ -13,23 +13,38 @@ def init_data():
     ID INTEGER PRIMARY KEY AUTOINCREMENT,
     NAME TEXT,
     GENDER TEXT,
-    AGE INT
+    DOB TEXT
     )'''
     cursor.execute(table)
 
+    # Drop old MOVEMENTS table if it exists with wrong schema
+    cursor.execute("DROP TABLE IF EXISTS MOVEMENTS")
+    
+    # Create movements table with correct schema
+    movements_table = '''CREATE TABLE IF NOT EXISTS MOVEMENTS(
+    MOVEMENT_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+    PATIENT_ID INTEGER,
+    DATETIME TEXT,
+    MOVEMENT_TYPE TEXT,
+    RISK_LEVEL TEXT,
+    FOREIGN KEY(PATIENT_ID) REFERENCES PATIENTS(ID)
+    )'''
+    cursor.execute(movements_table)
+    
+    connection.commit()
     connection.close()
 
 # -----------------------------
 # Patient functions
 # -----------------------------
 
-def add_patient(name, gender, age):
+def add_patient(name, gender, dob):
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
 
-    patient = '''INSERT INTO PATIENTS(NAME, GENDER, AGE) 
+    patient = '''INSERT INTO PATIENTS(NAME, GENDER, DOB) 
         VALUES(?, ?, ?)'''
-    cursor.execute(patient, (name, gender, age))
+    cursor.execute(patient, (name, gender, dob))
     connection.commit()
     connection.close()
 
@@ -59,19 +74,38 @@ def max_id():
 # Patient data functions
 # -----------------------------
 
-def add_movement(id):
+def add_movement(patient_id, datetime_str, movement_type, risk_level):
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
+    
+    # Insert movement record
+    insert = '''INSERT INTO MOVEMENTS(PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL)
+        VALUES(?, ?, ?, ?)'''
+    cursor.execute(insert, (patient_id, datetime_str, movement_type, risk_level))
+    connection.commit()
+    connection.close()
+
+def get_patient_movements(patient_id):
     connection = sqlite3.connect('clinic.db')
     cursor = connection.cursor()
 
-    table = '''CREATE TABLE IF NOT EXISTS REPORTS(
-    REPORT_ID TEXT PRIMARY KEY,
-    NAME TEXT,
-    GENDER TEXT,
-    AGE INT
-    )'''
-    cursor.execute(table)
-    
+    read = '''SELECT MOVEMENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL FROM MOVEMENTS 
+              WHERE PATIENT_ID = ? ORDER BY DATETIME DESC'''
+    cursor.execute(read, (patient_id,))
+    output = cursor.fetchall()
     connection.close()
+    return output
+
+def get_all_movements():
+    connection = sqlite3.connect('clinic.db')
+    cursor = connection.cursor()
+
+    read = '''SELECT MOVEMENT_ID, PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL FROM MOVEMENTS 
+              ORDER BY DATETIME DESC'''
+    cursor.execute(read)
+    output = cursor.fetchall()
+    connection.close()
+    return output
 
 
 
