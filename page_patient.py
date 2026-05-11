@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import streamlit as st
 from data import *
+from datetime import datetime
 import time
 
 
@@ -143,7 +144,18 @@ def show():
 
     with st.container(key="st-key-notes_card"):
         st.markdown('<div class="section-title">Notes</div>', unsafe_allow_html=True)
-        notes_text = st.text_area("Patient Notes", placeholder="Enter clinical notes here...", height=120, label_visibility="collapsed")
+        notes_text = st.text_area("Patient Notes", placeholder="Enter clinical notes here...", height=120, label_visibility="collapsed", max_chars=600)
+        
+        col1, col2 = st.columns([4, 1], gap="medium")
+        with col2:
+            if st.button("Save Note", use_container_width=True):
+                if notes_text.strip():
+                    datetime_str = datetime.now().isoformat()
+                    add_note(patient[0], datetime_str, notes_text)
+                    st.success("Note saved successfully!")
+                    st.rerun()
+                else:
+                    st.warning("Please enter a note before saving.")
 
 
 
