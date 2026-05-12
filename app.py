@@ -3,7 +3,6 @@ from styles import load_styles
 from data import *
 
 init_data()
-add_sample_data()
 load_styles()
 
 # initialise page

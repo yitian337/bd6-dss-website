@@ -31,3 +31,7 @@ def show():
         st.markdown("<br>", unsafe_allow_html=True)
     else:
         st.info("No patients in the system yet.")
+    
+    # # -----------------------------
+    # # Patient statistics section
+    # # -----------------------------

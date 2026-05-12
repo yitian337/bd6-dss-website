@@ -1,20 +1,25 @@
 import re
 import sqlite3
+from pathlib import Path
+
+# Database path - absolute path to ensure single database location
+DB_PATH = str(Path(__file__).parent / 'clinic.db')
 
 # -----------------------------
 # Initiate setup
 # -----------------------------
 
 def clear_data():
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
     cursor.execute("DELETE FROM PATIENTS")
     cursor.execute("DELETE FROM MOVEMENTS")
+    cursor.execute("DELETE FROM NOTES")
     connection.commit()
     connection.close()
 
 def init_data():
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
     patients_table = '''CREATE TABLE IF NOT EXISTS PATIENTS(
@@ -30,6 +35,8 @@ def init_data():
     PATIENT_ID INTEGER,
     DATETIME TEXT,
     MOVEMENT_TYPE TEXT,
+    ROM_VALUE REAL,      
+    JERK_VALUE REAL,     
     RISK_LEVEL TEXT,
     FOREIGN KEY(PATIENT_ID) REFERENCES PATIENTS(PATIENT_ID)
     )'''
@@ -52,7 +59,7 @@ def init_data():
 # -----------------------------
 
 def add_patient(name, gender, dob):
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
     patient = '''INSERT INTO PATIENTS(NAME, GENDER, DOB) 
@@ -62,7 +69,7 @@ def add_patient(name, gender, dob):
     connection.close()
 
 def all_patients():
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
     read = '''SELECT * FROM PATIENTS'''
@@ -76,7 +83,7 @@ def all_patients():
 # -----------------------------
 
 def add_note(patient_id, datetime_str, note_text):
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
     
     # Insert note record
@@ -87,7 +94,7 @@ def add_note(patient_id, datetime_str, note_text):
     connection.close()
 
 def get_patient_notes(patient_id):
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
     read = '''SELECT NOTE_ID, DATETIME, NOTE_TEXT FROM NOTES 
@@ -101,22 +108,26 @@ def get_patient_notes(patient_id):
 # Patient data functions
 # -----------------------------
 
-def add_movement(patient_id, datetime_str, movement_type, risk_level):
-    connection = sqlite3.connect('clinic.db')
+def add_movement(patient_id, datetime_str, movement_type, rom_value, jerk_value, risk_level):
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
+    insert = '''INSERT INTO MOVEMENTS(PATIENT_ID, DATETIME, MOVEMENT_TYPE, ROM_VALUE, JERK_VALUE, RISK_LEVEL)
+                VALUES(?, ?, ?, ?, ?, ?)'''
     
-    # Insert movement record
-    insert = '''INSERT INTO MOVEMENTS(PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL)
-        VALUES(?, ?, ?, ?)'''
-    cursor.execute(insert, (patient_id, datetime_str, movement_type, risk_level))
+    cursor.execute(insert, (patient_id, datetime_str, movement_type, rom_value, jerk_value, risk_level))
+    
     connection.commit()
+    
+    last_id = cursor.lastrowid
     connection.close()
+    
+    return last_id
 
 def get_patient_movements(patient_id):
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
-    read = '''SELECT MOVEMENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL FROM MOVEMENTS 
+    read = '''SELECT MOVEMENT_ID, DATETIME, MOVEMENT_TYPE, ROM_VALUE, JERK_VALUE, RISK_LEVEL FROM MOVEMENTS 
               WHERE PATIENT_ID = ? ORDER BY DATETIME DESC'''
     cursor.execute(read, (patient_id,))
     output = cursor.fetchall()
@@ -124,142 +135,12 @@ def get_patient_movements(patient_id):
     return output
 
 def get_all_movements():
-    connection = sqlite3.connect('clinic.db')
+    connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
 
-    read = '''SELECT MOVEMENT_ID, PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL FROM MOVEMENTS 
+    read = '''SELECT MOVEMENT_ID, PATIENT_ID, DATETIME, MOVEMENT_TYPE, ROM_VALUE, JERK_VALUE, RISK_LEVEL FROM MOVEMENTS 
               ORDER BY DATETIME DESC'''
     cursor.execute(read)
     output = cursor.fetchall()
     connection.close()
     return output
-
-# -----------------------------
-# Sample data function
-# -----------------------------
-
-def add_sample_data():
-    """Add example patient and movement data to the database"""
-    connection = sqlite3.connect('clinic.db')
-    cursor = connection.cursor()
-    
-    # Check if sample data already exists
-    cursor.execute("SELECT COUNT(*) FROM PATIENTS")
-    if cursor.fetchone()[0] > 0:
-        connection.close()
-        return
-    
-    # Add sample patient
-    cursor.execute("INSERT INTO PATIENTS(NAME, GENDER, DOB) VALUES(?, ?, ?)", 
-                   ("John Smith", "M", "1965-03-15"))
-    connection.commit()
-    
-    # Get the patient ID
-    cursor.execute("SELECT last_insert_rowid()")
-    patient_id = cursor.fetchone()[0]
-    
-    # Add sample movements
-    sample_movements = [
-        (patient_id, "2026-05-11 14:30:00", "Reach", "Low"),
-        (patient_id, "2026-05-11 13:15:00", "Lift Arm", "Medium"),
-        (patient_id, "2026-05-10 16:45:00", "Rotate Arm", "High"),
-        (patient_id, "2026-05-10 10:20:00", "Reach", "Low"),
-    ]
-    
-    for patient_id, datetime_str, movement_type, risk_level in sample_movements:
-        cursor.execute("INSERT INTO MOVEMENTS(PATIENT_ID, DATETIME, MOVEMENT_TYPE, RISK_LEVEL) VALUES(?, ?, ?, ?)",
-                       (patient_id, datetime_str, movement_type, risk_level))
-    
-    connection.commit()
-    connection.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# patients = [
-#     {"id": "P001", "name": "Patient A", "gender": "Unknown", "initials": "PA"},
-#     {"id": "P002", "name": "Patient B", "gender": "Unknown", "initials": "PB"},
-#     {"id": "P003", "name": "Patient C", "gender": "Unknown", "initials": "PC"},
-#     {"id": "P004", "name": "Patient D", "gender": "Unknown", "initials": "PD"},
-# ]
-
-# # -----------------------------
-# # Fake exercise report data
-# # later can be replaced by SQL
-# # -----------------------------
-# fake_reports = {
-#     "Patient A": {
-#         "score": 84,
-#         "rom": "72%",
-#         "stability": "80%",
-#         "coordination": "78%",
-#         "feedback": "goodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgoodgood",
-#         "clinician_note": "I hate the start of school.",
-#         "image": "images/reach.png"
-#     },
-#     "Patient B": {
-#         "score": 88,
-#         "rom": "85%",
-#         "stability": "82%",
-#         "coordination": "86%",
-#         "feedback": "Arm lifting performance was generally good. Minor asymmetry appeared near the end of the movement.",
-#         "clinician_note": "hi",
-#         "image": "images/lift_arm.png"
-#     },
-#     "Patient C": {
-#         "score": 76,
-#         "rom": "68%",
-#         "stability": "74%",
-#         "coordination": "71%",
-#         "feedback": "Rotation task showed limited range and reduced smoothness. Compensation at the shoulder was detected.",
-#         "clinician_note": "wish we can get good marks.",
-#         "image": "images/rotate_arm.png"
-#     },
-#     "Patient D": {
-#         "score": 69,
-#         "rom": "61%",
-#         "stability": "65%",
-#         "coordination": "63%",
-#         "feedback": "no feedback",
-#         "clinician_note": "🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱🥱",
-#         "image": "images/unknown.png"
-#     }
-# }
-
-# fake_exercise = {
-#     "Reach and Retrieve": {
-#         "image": "images/reach.png",
-#         "feedback": "Reach task performance...",
-#         "clinician_note": "Keep arm straight."
-#     },
-#     "Lift Arm": {
-#         "image": "images/lift_arm.png",
-#         "feedback": "Arm lifting is stable...",
-#         "clinician_note": "Reduce shoulder elevation."
-#     },
-#     "Rotate Arm": {
-#         "image": "images/rotate_arm.png",
-#         "feedback": "Rotation limited...",
-#         "clinician_note": "Focus on smooth motion."
-#     },
-#     "Unknown": {
-#         "image": "images/unknown.png",
-#         "feedback": "Unknown exercise...",
-#         "clinician_note": "Check classification."
-#     }
-# }
