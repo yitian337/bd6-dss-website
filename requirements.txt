@@ -2,3 +2,9 @@ streamlit
 pandas
 numpy
 matplotlib
+joblib
+scikit-learn
+numpy
+pandas
+streamlit
+matplotlib
