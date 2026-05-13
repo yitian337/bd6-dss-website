@@ -154,7 +154,7 @@ def show():
                         border: 1px solid #dbe7f3;
                         border-radius: 14px;
                         padding: 16px;
-                        min-height: 115px;
+                        min-height: 122px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
@@ -340,7 +340,7 @@ def show():
                         border: 1px solid #dbe7f3;
                         border-radius: 14px;
                         padding: 16px;
-                        min-height: 115px;
+                        min-height: 121px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;

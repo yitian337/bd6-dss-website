@@ -31,7 +31,11 @@ def show():
                             st.error("Invalid date format. Please use YYYY-MM-DD (e.g., 1995-03-15)")
                     else:
                         st.error("Please fill in all fields.")
-    
+
+    with middle:
+        search_text = st.text_input("Enter", label_visibility="collapsed", placeholder="Search patient by name or ID")
+
+
     with right:
         if st.button("← Back", key="back_btn", use_container_width=True):
                         st.session_state.selected_patient = None
@@ -60,8 +64,6 @@ def show():
             "RISK_LEVEL"
         ]
     )
-
-    search_text = st.text_input("Search patient by name or ID")
 
     patient_stats = {}
 
@@ -158,6 +160,7 @@ def show():
                     st.markdown('<div class="patient-img">', unsafe_allow_html=True)
                     st.image(display_img, width="stretch")
                     st.markdown("</div>", unsafe_allow_html=True)
+                    
 
                 with info_col:
                     st.markdown(f"""

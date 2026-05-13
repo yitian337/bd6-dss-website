@@ -67,37 +67,34 @@ def show():
     # Filters
     # -----------------------------
 
-    filter_col1, filter_col2 = st.columns(2)
+    filter_col1, filter_col2, sort_col = st.columns(3)
 
     with filter_col1:
         selected_movement = st.selectbox(
             "Filter by Movement",
             ["All", "A", "B", "C", "D"]
         )
-
-    with filter_col2:
-        selected_risk = st.selectbox(
-            "Filter by Risk",
-            ["All", "High", "Medium", "Low"]
-        )
-
+    
     if selected_movement != "All":
         movements = [
             m for m in movements
             if str(m[2]).lower() == selected_movement.lower()
         ]
 
+    with filter_col2:
+        selected_risk = st.selectbox(
+            "Filter by Risk",
+            ["All", "High", "Medium", "Low"]
+        )
+    
     if selected_risk != "All":
         movements = [
             m for m in movements
             if str(m[5]).lower() == selected_risk.lower()
         ]
-
-    # -----------------------------
-    # Sorting
-    # -----------------------------
-
-    sort_option = st.selectbox(
+    
+    with sort_col:
+        sort_option = st.selectbox(
         "Sort by",
         [
             "Latest Time",
@@ -147,7 +144,10 @@ def show():
             movements,
             key=lambda x: x[4] if x[4] is not None else 999
         )
-    #############
+
+    # -----------------------------
+    # Sorting
+    # -----------------------------
 
     if not movements:
         st.info("No movements recorded for this patient yet.")

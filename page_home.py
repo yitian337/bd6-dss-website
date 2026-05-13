@@ -38,79 +38,17 @@ def show():
     # Hero section
     # -----------------------------
 
-    st.html(f"""
-    <div style="
-        background: linear-gradient(120deg, #eef5ff 0%, #f8fbff 100%);
-        border-radius: 28px;
-        padding: 30px 42px;
-        margin-bottom: 24px;
-        border: 1px solid #dbe7f3;
+    st.markdown('<div class="main-title">Clinic Dashboard</div>', unsafe_allow_html=True)
+    st.markdown("<br>", unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns([1, 1, 1])
+    with col2:
+        if st.button("View All Patients", use_container_width=True, type="primary"):
+            st.session_state.page = "select"
+            st.rerun()
 
-        display:flex;
-        align-items:center;
-        justify-content:flex-start;
-        gap:16px;
-    ">
+    st.markdown("<br><br>", unsafe_allow_html=True)
 
-        <!-- 左边文字 -->
-        <div style="
-            width:60%;
-        ">
-
-            <div style="
-                color:#6b7a8c;
-                font-size:14px;
-                margin-bottom:8px;
-            ">
-                AI Rehabilitation Decision Support
-            </div>
-
-            <div style="
-                color:#1f4e79;
-                font-size:44px;
-                font-weight:700;
-                line-height:1.15;
-                max-width:620px;
-                margin-bottom:18px;
-            ">
-                Intelligent rehabilitation monitoring you can rely on
-            </div>
-
-            <div style="
-                color:#6b7a8c;
-                font-size:17px;
-                max-width:650px;
-                line-height:1.6;
-                margin-bottom:24px;
-            ">
-                Track patient movement quality, rehabilitation risk, and progress using motion analysis data.
-            </div>
-
-            <!-- 按钮 -->
-            <a href="/?page=select" target="_self" style="
-                display:inline-block;
-                background:#2f5b82;
-                color:white;
-                padding:12px 24px;
-                border-radius:24px;
-                font-size:15px;
-                font-weight:600;
-                text-decoration:none;
-            ">
-                View Patient List
-            </a>
-
-        </div>
-
-        <!-- 右边医生图片 -->
-        <img src="data:image/png;base64,{img_base64}"
-            style="
-                width:300px;
-                border-radius:20px;
-            ">
-
-    </div>
-    """)
     # -----------------------------
     # Summary statistics
     # -----------------------------
