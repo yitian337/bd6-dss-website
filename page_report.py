@@ -8,6 +8,7 @@ import time
 
 def show():
     patient = st.session_state.selected_patient
+    st.session_state.viewing_movement_id = None
     
     patient_id = f"{patient[0]:04d}"
     name = patient[1]
@@ -186,7 +187,7 @@ def show():
         with col6:
             st.markdown('<div style="font-weight: bold;">Risk</div>', unsafe_allow_html=True)
         with col7:
-            st.markdown('<div style="font-weight: bold;">View</div>', unsafe_allow_html=True)
+            st.markdown('<div style="font-weight: bold;">Raw Accelerometer Data</div>', unsafe_allow_html=True)
 
         st.divider()
 
@@ -210,7 +211,7 @@ def show():
                 risk_color = "#d32f2f" if row["Risk"] == "High" else "#f57c00" if row["Risk"] == "Medium" else "#388e3c"
                 st.markdown(f'<div style="color: {risk_color}; font-weight: bold;">{row["Risk"]}</div>', unsafe_allow_html=True)
             with col7:
-                if st.button("View Raw Data", key=f"view_raw_{row['ID']}", use_container_width=True):
+                if st.button("View", key=f"view_raw_{row['ID']}", use_container_width=True):
                     st.session_state.viewing_movement_id = row['ID']
 
     # # -----------------------------
@@ -218,7 +219,7 @@ def show():
     # # -----------------------------
 
     if "viewing_movement_id" in st.session_state and st.session_state.viewing_movement_id:
-        @st.dialog("Raw Sensor Data", width="large")
+        @st.dialog("Raw Accelerometer Data", width="large")
         def show_raw_data_modal():
             mov_id = st.session_state.viewing_movement_id
             csv_path = Path(__file__).parent / "raw_data" / f"mov_{mov_id}.csv"
@@ -259,7 +260,7 @@ def show():
                                     'Z': df[acc_z_col]
                                 })
                                 
-                                st.line_chart(chart_data)
+                                st.line_chart(chart_data, x_label="Time (ms)", y_label="Acceleration (m/s^2)")
                             else:
                                 st.warning(f"Accelerometer data not found for {sensor}")
                 

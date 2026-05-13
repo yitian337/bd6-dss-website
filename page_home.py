@@ -7,10 +7,6 @@ import os
 from pathlib import Path
 import base64
 
-img_path = Path(__file__).with_name("doctor.png")
-
-with open(img_path, "rb") as img_file:
-    img_base64 = base64.b64encode(img_file.read()).decode()
 
 def show():
     patients = all_patients()
@@ -130,9 +126,9 @@ def show():
 
             for gender in gender_counts.index:
                 if str(gender).upper() == "M":
-                    colors.append("#a8d8ff")  # 浅蓝
+                    colors.append("#cca8ff")  # 浅蓝
                 elif str(gender).upper() == "F":
-                    colors.append("#ffd6e7")  # 浅粉
+                    colors.append("#d6ffe4")  # 浅粉
                 else:
                     colors.append("#d9d9d9")
 

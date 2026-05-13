@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 import streamlit as st
+from classifier import add_new_data
 from data import *
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -71,7 +72,34 @@ def show():
             with st.popover("Load Data", use_container_width=True):
                 st.markdown('<div class="section-title">Load New Data</div>', unsafe_allow_html=True)
                 st.markdown('<div class="dropdown-label">Upload new movement data for this patient</div>', unsafe_allow_html=True)
-                uploaded_file = st.file_uploader("Choose a CSV file", type="csv", key="data_upload")
+
+                with st.form("sensor_upload_form", clear_on_submit=True):
+                    file_dict = {}
+                    file_dict["Wrist"] = st.file_uploader("Wrist Data", type="txt", key="data_upload1")
+                    file_dict["Forearm"] = st.file_uploader("Forearm Data", type="txt", key="data_upload2")
+                    file_dict["Elbow"] = st.file_uploader("Elbow Data", type="txt", key="data_upload3")
+                    file_dict["Shoulder"] = st.file_uploader("Shoulder Data", type="txt", key="data_upload4")
+
+                    submitted = st.form_submit_button("Upload & Analyze", use_container_width=True)
+
+                    if submitted:
+                        missing = [s for s in ["Wrist", "Forearm", "Elbow", "Shoulder"] if file_dict[s] is None]
+                        
+                        if missing:
+                            st.error(f"Missing data for: {', '.join(missing)}")
+                        else:
+                            try:
+                                with st.spinner("Analyzing movement patterns..."):
+                                    # Process data using the classifier logic
+                                    count = add_new_data(patient_id, file_dict, add_movement)
+                                
+                                st.success(f"Successfully processed {count} movements")
+                                
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Processing error: {str(e)}")
+
+
 
     # -----------------------------
     # Prepare movement data
@@ -154,7 +182,7 @@ def show():
                         border: 1px solid #dbe7f3;
                         border-radius: 14px;
                         padding: 16px;
-                        min-height: 122px;
+                        min-height: 124px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
@@ -180,7 +208,7 @@ def show():
                 border: 1px solid #dbe7f3;
                 border-radius: 14px;
                 padding: 24px;
-                min-height: 420px;
+                min-height: 544px;
                 margin-top: -20px;
             }
             </style>
@@ -340,7 +368,7 @@ def show():
                         border: 1px solid #dbe7f3;
                         border-radius: 14px;
                         padding: 16px;
-                        min-height: 121px;
+                        min-height: 124px;
                         display: flex;
                         flex-direction: column;
                         align-items: center;
