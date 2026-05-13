@@ -222,8 +222,21 @@ def load_styles():
         color: white !important;
         border-radius: 14px !important;
         border: none !important;
-        height: 45px !important;
+        height: 36px !important;
         font-weight: 600 !important;
+        font-size: 14px !important;
+    }
+    
+    /* Compact button containers in top card */
+    .st-key-back_wrap,
+    .st-key-report_wrap {
+        margin-bottom: -4px !important;
+    }
+    
+    /* Compact popover button */
+    div[class*="st-key-patient_info_card"] .stPopover > button {
+        height: 36px !important;
+        font-size: 14px !important;
     }
 
     div.stButton > button:hover {

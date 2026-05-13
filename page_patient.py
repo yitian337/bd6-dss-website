@@ -57,10 +57,25 @@ def show():
                     st.rerun()
             
             with st.container(key="report_wrap"):
-                if st.button("View Reports", key="report_btn", use_container_width=True):
+                if st.button("Reports", key="report_btn", use_container_width=True):
                     st.session_state.page = "patient"
                     st.session_state.page = "report"
                     st.rerun()
+            
+            with st.popover("Load Data", use_container_width=True):
+                st.markdown('<div class="section-title">Load New Data</div>', unsafe_allow_html=True)
+                st.markdown('<div class="dropdown-label">Upload new movement data for this patient</div>', unsafe_allow_html=True)
+                uploaded_file = st.file_uploader("Choose a CSV file", type="csv", key="data_upload")
+
+                if uploaded_file is not None:
+                    try:
+                        # Simulate loading time
+                        with st.spinner("Processing data..."):
+                            time.sleep(2)  # Simulate processing delay
+                            # Here you would add code to process and save the uploaded data
+                            st.success("Data loaded successfully!")
+                    except Exception as e:
+                        st.error(f"Error processing file: {e}")
 
     # # -----------------------------
     # # Main content area

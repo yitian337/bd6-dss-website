@@ -50,11 +50,10 @@ def show():
             st.markdown('<div class="section-title">Exercise History</div>', unsafe_allow_html=True)
 
         with right:
-            with st.container(key="back_wrap"):
-                if st.button("← Back", key="back_btn", use_container_width=True):
-                    st.session_state.selected_patient = patient
-                    st.session_state.page = "patient"
-                    st.rerun()
+            if st.button("← Back", key="back_btn", use_container_width=True):
+                st.session_state.selected_patient = patient
+                st.session_state.page = "patient"
+                st.rerun()
 
     # # -----------------------------
     # # Table
@@ -141,30 +140,40 @@ def show():
                 try:
                     df = pd.read_csv(csv_path)
                     
-                    sensor_order = ['Shoulder', 'Elbow', 'Forearm', 'Wrist']
-                    sensors = [s for s in sensor_order if s in df['sensor'].unique()]
+                    # Detect available sensors from column names
+                    sensor_order = ['Wrist', 'Forearm', 'Elbow', 'Shoulder']
+                    available_sensors = []
+                    for sensor in sensor_order:
+                        if any(col.startswith(sensor + '_') for col in df.columns):
+                            available_sensors.append(sensor)
                     
-                    cols = st.columns(4)
+                    if not available_sensors:
+                        st.warning("No sensor data found in CSV")
+                        return
                     
-                    for idx, sensor in enumerate(sensors):
+                    cols = st.columns(min(4, len(available_sensors)))
+                    
+                    for idx, sensor in enumerate(available_sensors):
                         with cols[idx]:
-                            sensor_data = df[df['sensor'] == sensor].reset_index(drop=True)
+                            st.markdown(f"**{sensor}**")
                             
-                            if len(sensor_data) > 0:
-                                st.markdown(f"**{sensor}**")
-                                
-                                chart_data = sensor_data[['sample_index', 'Acc_X', 'Acc_Y', 'Acc_Z']].rename(
-                                    columns={
-                                        'sample_index': 'Sample',
-                                        'Acc_X': 'X',
-                                        'Acc_Y': 'Y',
-                                        'Acc_Z': 'Z'
-                                    }
-                                ).set_index('Sample')
+                            # Extract accelerometer columns for this sensor
+                            acc_x_col = f'{sensor}_Acc_X'
+                            acc_y_col = f'{sensor}_Acc_Y'
+                            acc_z_col = f'{sensor}_Acc_Z'
+                            
+                            # Check if columns exist
+                            if acc_x_col in df.columns and acc_y_col in df.columns and acc_z_col in df.columns:
+                                chart_data = pd.DataFrame({
+                                    'X': df[acc_x_col],
+                                    'Y': df[acc_y_col],
+                                    'Z': df[acc_z_col]
+                                })
                                 
                                 st.line_chart(chart_data)
                             else:
-                                st.warning(f"No data for {sensor}")
+                                st.warning(f"Accelerometer data not found for {sensor}")
+                
                 except Exception as e:
                     st.error(f"Error loading raw data: {e}")
             else:
