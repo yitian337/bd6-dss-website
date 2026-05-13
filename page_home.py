@@ -31,7 +31,7 @@ def show():
     )
 
     # -----------------------------
-    # Hero section
+    # Top section
     # -----------------------------
 
     st.markdown('<div class="main-title">Clinic Dashboard</div>', unsafe_allow_html=True)

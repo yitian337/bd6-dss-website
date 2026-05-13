@@ -62,7 +62,12 @@ def show():
 
     movements = get_patient_movements(patient[0])
 
-    movements = get_patient_movements(patient[0])
+    MOVEMENT_DISPLAY_NAMES = {
+    "A": "Reach & Retrieve",
+    "B": "Lift Cup",
+    "C": "Swing Arm",
+    "D": "Rotate Wrist"
+}
 
     # -----------------------------
     # Filters
@@ -71,15 +76,18 @@ def show():
     filter_col1, filter_col2, sort_col = st.columns(3)
 
     with filter_col1:
+        # Changed from ["All", "A", "B", "C", "D"] to full names
         selected_movement = st.selectbox(
             "Filter by Movement",
-            ["All", "A", "B", "C", "D"]
+            ["All"] + list(MOVEMENT_DISPLAY_NAMES.values())
         )
-    
+
     if selected_movement != "All":
+        # Justification: Database returns a tuple where index 2 is MOVEMENT_TYPE (the name).
+        # We match the selected name directly against the stored string.
         movements = [
             m for m in movements
-            if str(m[2]).lower() == selected_movement.lower()
+            if str(m[2]) == selected_movement
         ]
 
     with filter_col2:
@@ -87,11 +95,12 @@ def show():
             "Filter by Risk",
             ["All", "High", "Medium", "Low"]
         )
-    
+
     if selected_risk != "All":
+        # Justification: Index 5 corresponds to RISK_LEVEL in the SQL SELECT statement.
         movements = [
             m for m in movements
-            if str(m[5]).lower() == selected_risk.lower()
+            if str(m[5]) == selected_risk
         ]
     
     with sort_col:

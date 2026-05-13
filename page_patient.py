@@ -95,6 +95,7 @@ def show():
                                 
                                 st.success(f"Successfully processed {count} movements")
                                 
+
                                 st.rerun()
                             except Exception as e:
                                 st.error(f"Processing error: {str(e)}")
@@ -354,10 +355,10 @@ def show():
 
     with right_col:
         right_metrics = {
-            "Reach & Retrieve Repetitions": movement_counts.get("A", 0),
-            "Cup to Mouth Repetitions": movement_counts.get("B", 0),
-            "Swing Arm Repetitions": movement_counts.get("C", 0),
-            "Rotate Wrist Repetitions": movement_counts.get("D", 0)
+            "Reach & Retrieve Repetitions": movement_counts.get("Reach & Retrieve", 0),
+            "Cup to Mouth Repetitions": movement_counts.get("Lift Cup", 0),
+            "Swing Arm Repetitions": movement_counts.get("Swing Arm", 0),
+            "Rotate Wrist Repetitions": movement_counts.get("Rotate Wrist", 0)
         }
 
         for i, (label, value) in enumerate(right_metrics.items()):
@@ -382,13 +383,14 @@ def show():
                     </div>
                 """, unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
     # -----------------------------
     # Notes section
     # -----------------------------
+    
+    st.markdown("<br>", unsafe_allow_html=True)
 
-    with st.container(key="st-key-notes_card"):
+    with st.container(key="st-notes_card"):
+
         st.markdown('<div class="section-title">Notes</div>', unsafe_allow_html=True)
 
         notes_text = st.text_area(
