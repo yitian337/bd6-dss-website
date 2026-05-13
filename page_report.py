@@ -61,6 +61,94 @@ def show():
 
     movements = get_patient_movements(patient[0])
 
+    movements = get_patient_movements(patient[0])
+
+    # -----------------------------
+    # Filters
+    # -----------------------------
+
+    filter_col1, filter_col2 = st.columns(2)
+
+    with filter_col1:
+        selected_movement = st.selectbox(
+            "Filter by Movement",
+            ["All", "A", "B", "C", "D"]
+        )
+
+    with filter_col2:
+        selected_risk = st.selectbox(
+            "Filter by Risk",
+            ["All", "High", "Medium", "Low"]
+        )
+
+    if selected_movement != "All":
+        movements = [
+            m for m in movements
+            if str(m[2]).lower() == selected_movement.lower()
+        ]
+
+    if selected_risk != "All":
+        movements = [
+            m for m in movements
+            if str(m[5]).lower() == selected_risk.lower()
+        ]
+
+    # -----------------------------
+    # Sorting
+    # -----------------------------
+
+    sort_option = st.selectbox(
+        "Sort by",
+        [
+            "Latest Time",
+            "Oldest Time",
+            "Highest ROM",
+            "Lowest ROM",
+            "Highest Jerk",
+            "Lowest Jerk"
+        ]
+    )
+
+    if sort_option == "Latest Time":
+        movements = sorted(
+            movements,
+            key=lambda x: x[1],
+            reverse=True
+        )
+
+    elif sort_option == "Oldest Time":
+        movements = sorted(
+            movements,
+            key=lambda x: x[1]
+        )
+
+    elif sort_option == "Highest ROM":
+        movements = sorted(
+            movements,
+            key=lambda x: x[3] if x[3] is not None else -999,
+            reverse=True
+        )
+
+    elif sort_option == "Lowest ROM":
+        movements = sorted(
+            movements,
+            key=lambda x: x[3] if x[3] is not None else 999
+        )
+
+    elif sort_option == "Highest Jerk":
+        movements = sorted(
+            movements,
+            key=lambda x: x[4] if x[4] is not None else -999,
+            reverse=True
+        )
+
+    elif sort_option == "Lowest Jerk":
+        movements = sorted(
+            movements,
+            key=lambda x: x[4] if x[4] is not None else 999
+        )
+    #############
+
     if not movements:
         st.info("No movements recorded for this patient yet.")
     else:
@@ -84,6 +172,7 @@ def show():
 
         # Display header
         col1, col2, col3, col4, col5, col6, col7 = st.columns([1.2, 1.0, 1.2, 0.8, 0.8, 1.0, 1.0], gap="small")
+
         with col1:
             st.markdown('<div style="font-weight: bold;">Day</div>', unsafe_allow_html=True)
         with col2:
