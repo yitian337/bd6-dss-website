@@ -161,14 +161,43 @@ def show():
             )
 
             df_patients["Age"] = (
-                today.year - df_patients["DOB"].dt.year
+                    today.year - df_patients["DOB"].dt.year
             )
 
-            fig, ax = plt.subplots(figsize=(4, 3))
-            ax.hist(df_patients["Age"].dropna(), bins=5)
+            fig, ax = plt.subplots(figsize=(5, 3.5))
+
+            counts, bins, patches = ax.hist(
+                df_patients["Age"].dropna(),
+                bins=5,
+                edgecolor="black",
+                linewidth=1.2
+            )
+
+            # 在柱子顶部显示数值
+            for count, patch in zip(counts, patches):
+                if count > 0:
+                    ax.text(
+                        patch.get_x() + patch.get_width() / 2,
+                        count,
+                        f"{int(count)}",
+                        ha='center',
+                        va='bottom',
+                        fontsize=10
+                    )
+
             ax.set_xlabel("Age")
             ax.set_ylabel("Patients")
+
+            # 美化
+            ax.spines['top'].set_visible(False)
+            ax.spines['right'].set_visible(False)
+
+            ax.grid(axis='y', linestyle='--', alpha=0.4)
+
+            plt.tight_layout()
+
             st.pyplot(fig)
+
         else:
             st.info("No patient data available")
 
